@@ -52,6 +52,7 @@ def fechHolderNft(collection_address,indexLimit):
     print("Done!")  
     df = pd.DataFrame(list(holder.items()), columns=['Index', 'Holder'])  
     df.to_csv("listHolder.csv",index=False)
+    
 ownerAddressCollection = input("Enter address owner of collection : ")
 collectionInfo = fechCollectionInfo(ownerAddressCollection)
 
