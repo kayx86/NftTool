@@ -67,6 +67,8 @@ async def snapshotNFT(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         indexLimit = data["next_item_index"]
 
     fechHolderNft(collectionAddress,indexLimit)
+    
+    await context.bot.send_message(chat_id=update.message.chat_id, text=f"Total Holder for this NFT Collection is : {indexLimit}")
     await context.bot.send_document(chat_id=update.message.chat_id,document=open('listHolder.csv', 'rb'), filename="holder.csv")
     
 app = ApplicationBuilder().token(teleKey).build()
