@@ -18,10 +18,10 @@ apiKeyHeaders = {
     "X-API-Key": apiKey
 }
 
-def fechCollectionInfo(owner_address):
+def fechCollectionInfo(collection_address):
 
     res = get(
-        f"{queryURL}/nft/collections?owner_address={owner_address}&limit=256&offset=0",
+        f"{queryURL}/nft/collections?collection_address={collection_address}&limit=256&offset=0",
         headers=apiKeyHeaders
     )
     dataRaw = res.json()

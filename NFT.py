@@ -15,10 +15,10 @@ apiKeyHeaders = {
     "X-API-Key": apiKey
 }
 
-def fechCollectionInfo(owner_address):
+def fechCollectionInfo(collection_address):
 
     res = get(
-        f"{queryURL}/nft/collections?owner_address={owner_address}&limit=256&offset=0",
+        f"{queryURL}/nft/collections?collection_address={collection_address}&limit=256&offset=0",
         headers=apiKeyHeaders
     )
     dataRaw = res.json()
@@ -53,8 +53,8 @@ def fechHolderNft(collection_address,indexLimit):
     df = pd.DataFrame(list(holder.items()), columns=['Index', 'Holder'])  
     df.to_csv("listHolder.csv",index=False)
     
-ownerAddressCollection = input("Enter address owner of collection : ")
-collectionInfo = fechCollectionInfo(ownerAddressCollection)
+addressCollection = input("Enter address of collection : ")
+collectionInfo = fechCollectionInfo(addressCollection)
 
 for data in collectionInfo:
     collectionAddress = data["address"]
