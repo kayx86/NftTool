@@ -2,3 +2,4 @@ python-dotenv==1.0.1
 python-telegram-bot==21.2
 pytoniq_core==0.1.36
 requests==2.32.2
+pands=2.2.2
