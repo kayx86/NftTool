@@ -6,6 +6,7 @@ This tool assists projects in identifying the holders of an NFT collection to di
 Install the necessary libraries:
 
 `pip3 install -r requirements.txt`
+
 Create the .env file following the template:
 
 ```
