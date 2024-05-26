@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from requests import get
-import csv
+import pandas as pd 
 import json 
 import time
 import base64
@@ -34,28 +34,29 @@ def fechCollectionInfo(owner_address):
 
 def fechHolderNft(collection_address,indexLimit):
     index = 0
-    map = {}
-    with open("holder.csv", "w", newline="") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(["Index", "Holder Address"])
-        while True:
-            if index >= int(indexLimit):
-                break
-            res = get(
-                f"{queryURL}/nft/items?collection_address={collection_address}&limit=256&offset={index}&api_key={apiKey}",
-            )
-            dataRaw = res.json()    
-            
+    holder = {}
+   
+    while True:
+        if index >= int(indexLimit):
+            break
+        res = get(
+            f"{queryURL}/nft/items?collection_address={collection_address}&limit=256&offset={index}&api_key={apiKey}",
+        )
+        dataRaw = res.json()    
+        
 
-            listHolder = dataRaw["nft_items"]
-            for dataHolder in listHolder:
-                hexAddress = dataHolder["owner_address"]
-                address = Address(hexAddress)
-                writer.writerow([dataHolder["index"], address.to_str()])
+        listHolder = dataRaw["nft_items"]
+        for dataHolder in listHolder:
+            hexAddress = dataHolder["owner_address"]
+            address = Address(hexAddress)
+            holder[dataHolder["index"]] = address.to_str()
 
-            index += 256
-            time.sleep(1)
-    print("Done!")
+        index += 256
+        time.sleep(1)
+
+    print("Done!")  
+    df = pd.DataFrame(list(holder.items()), columns=['Index', 'Holder'])  
+    df.to_csv("listHolder.csv",index=False)
 
 async def snapshotNFT(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     data = update.message.text.partition(" ")[2]
@@ -66,7 +67,7 @@ async def snapshotNFT(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         indexLimit = data["next_item_index"]
 
     fechHolderNft(collectionAddress,indexLimit)
-    await context.bot.send_document(chat_id=update.message.chat_id,document=open('holder.csv', 'rb'), filename="holder.csv")
+    await context.bot.send_document(chat_id=update.message.chat_id,document=open('listHolder.csv', 'rb'), filename="holder.csv")
     
 app = ApplicationBuilder().token(teleKey).build()
 
